@@ -1,0 +1,1 @@
+{"dependencies":{"@skillforge/rules-engine":"*"},"exports":{".":"./src/index.ts"},"main":"./src/index.ts","name":"@skillforge/router","private":true,"type":"module","types":"./src/index.ts","version":"0.1.0"}
