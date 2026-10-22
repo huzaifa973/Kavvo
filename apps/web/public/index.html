@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skillforge — the agent that just does it</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">⚒</span>
+        <div>
+          <h1>Skillforge</h1>
+          <p class="tagline">The agent that just does it.</p>
+        </div>
+      </div>
+      <div class="health" id="health" title="Server health">
+        <span class="health-dot" id="health-dot"></span>
+        <span id="health-text">checking…</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel" id="skills-panel">
+        <h2>Skills</h2>
+        <p class="hint">
+          Small work, done natively and instantly. Pick a skill, shape the
+          JSON input, run it.
+        </p>
+        <ul class="skill-list" id="skill-list"></ul>
+
+        <div class="runner">
+          <h3 id="selected-skill-name">No skill selected</h3>
+          <p class="skill-desc" id="selected-skill-desc"></p>
+          <label for="skill-input">Input (JSON)</label>
+          <textarea id="skill-input" rows="6" spellcheck="false">{}</textarea>
+          <div class="row">
+            <button id="run-skill" type="button">Run skill</button>
+            <span class="status-line" id="skill-status"></span>
+          </div>
+          <label for="skill-result">Result</label>
+          <pre class="output" id="skill-result">—</pre>
+        </div>
+      </section>
+
+      <section class="panel" id="jobs-panel">
+        <h2>Jobs</h2>
+        <p class="hint">
+          Chain skills into a job. Steps can reference earlier outputs with
+          <code>{{stepId.field}}</code>. Jobs checkpoint after every step —
+          a failed job can be resumed, never restarted from zero.
+        </p>
+        <label for="job-input">Job definition (JSON)</label>
+        <textarea id="job-input" rows="11" spellcheck="false"></textarea>
+        <div class="row">
+          <button id="run-job" type="button">Run job</button>
+          <span class="status-line" id="job-status"></span>
+        </div>
+
+        <div class="row load-row">
+          <input
+            id="job-id-input"
+            type="text"
+            placeholder="…or paste a job id"
+            spellcheck="false"
+          />
+          <button id="load-job" type="button" class="secondary">Load</button>
+          <button id="refresh-jobs" type="button" class="secondary">
+            Refresh list
+          </button>
+        </div>
+        <ul class="job-list" id="job-list"></ul>
+
+        <div class="job-detail" id="job-detail" hidden>
+          <div class="row job-head">
+            <h3 id="job-title">Job</h3>
+            <span class="chip" id="job-chip">—</span>
+            <button id="resume-job" type="button" class="secondary">
+              Resume
+            </button>
+          </div>
+          <p class="job-meta" id="job-meta"></p>
+          <p class="job-error" id="job-error" hidden></p>
+          <ol class="step-list" id="step-list"></ol>
+        </div>
+      </section>
+
+      <section class="panel" id="memory-panel">
+        <h2>Memory</h2>
+        <p class="hint">
+          What the assistant remembers. Stored in full; tokens are spent
+          only when a question pulls a budgeted context.
+        </p>
+        <div class="row form-row">
+          <select id="memory-kind">
+            <option value="fact">fact</option>
+            <option value="preference" selected>preference</option>
+            <option value="person">person</option>
+            <option value="project">project</option>
+            <option value="note">note</option>
+          </select>
+          <input
+            id="memory-importance"
+            class="narrow"
+            type="number"
+            min="1"
+            max="5"
+            value="3"
+            title="Importance, 1 to 5"
+          />
+        </div>
+        <input
+          id="memory-text"
+          type="text"
+          placeholder="A fact worth remembering…"
+          spellcheck="false"
+        />
+        <input
+          id="memory-tags"
+          type="text"
+          placeholder="tags, comma separated (optional)"
+          spellcheck="false"
+        />
+        <div class="row">
+          <button id="add-memory" type="button">Remember</button>
+          <button id="refresh-memory" type="button" class="secondary">
+            Refresh
+          </button>
+          <span class="status-line" id="memory-status"></span>
+        </div>
+        <ul class="job-list plain-list" id="memory-list"></ul>
+
+        <label for="memory-query">Context for a question</label>
+        <div class="row load-row">
+          <input
+            id="memory-query"
+            type="text"
+            placeholder="What should the brain know about…?"
+            spellcheck="false"
+          />
+          <input
+            id="memory-budget"
+            class="narrow"
+            type="number"
+            min="1"
+            value="200"
+            title="Token budget"
+          />
+          <button id="memory-context-btn" type="button" class="secondary">
+            Get context
+          </button>
+        </div>
+        <pre class="output" id="memory-context">—</pre>
+        <p class="job-meta" id="memory-context-meta"></p>
+      </section>
+
+      <section class="panel" id="automations-panel">
+        <h2>Automations</h2>
+        <p class="hint">
+          Schedules that run jobs on their own. The job below is a
+          Composer job definition, executed when the schedule fires.
+        </p>
+        <ul class="job-list plain-list" id="automation-list"></ul>
+
+        <h3>New daily job</h3>
+        <input
+          id="auto-name"
+          type="text"
+          placeholder="Name, e.g. Morning slug"
+          spellcheck="false"
+        />
+        <div class="row form-row">
+          <input id="auto-time" class="narrow" type="time" value="09:00" />
+          <select id="auto-skill"></select>
+        </div>
+        <label for="auto-input">Skill input (JSON)</label>
+        <textarea id="auto-input" rows="3" spellcheck="false">{}</textarea>
+        <div class="row">
+          <button id="add-automation" type="button">Add daily job</button>
+          <button id="refresh-automations" type="button" class="secondary">
+            Refresh
+          </button>
+          <span class="status-line" id="automation-status"></span>
+        </div>
+      </section>
+
+      <section class="panel" id="forge-panel">
+        <h2>Skill Forge</h2>
+        <p class="hint">
+          Skills forged on demand enter the same registry as the
+          built-ins — they show up in the Skills panel above and can run
+          and chain immediately.
+        </p>
+        <ul class="job-list plain-list" id="forge-list"></ul>
+        <label for="forge-spec">New skill (JSON: spec + samples)</label>
+        <textarea id="forge-spec" rows="10" spellcheck="false"></textarea>
+        <div class="row">
+          <button id="forge-btn" type="button">Forge skill</button>
+          <button id="refresh-forge" type="button" class="secondary">
+            Refresh
+          </button>
+          <span class="status-line" id="forge-status"></span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Skillforge v0.1 — local shell. Skills and jobs run on this machine.</span>
+    </footer>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
