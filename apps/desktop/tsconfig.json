@@ -1,0 +1,1 @@
+{"compilerOptions":{"declaration":false,"noEmit":false,"outDir":"dist","rootDir":"../..","sourceMap":false,"types":["node"]},"extends":"../../tsconfig.base.json","include":["src"]}
