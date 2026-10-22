@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+release/
+coverage/
+
+# Local data (jobs, memory, forge records, schedules, browser profiles)
+.data/
+
+# Third-party clones for study/tooling — NOT part of this repo
+vendor/
+
+# Environment and secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
