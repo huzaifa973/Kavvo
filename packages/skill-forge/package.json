@@ -1,0 +1,1 @@
+{"dependencies":{"typescript":"^5.8.3"},"exports":{".":"./src/index.ts"},"main":"./src/index.ts","name":"@skillforge/skill-forge","private":true,"type":"module","types":"./src/index.ts","version":"0.1.0"}
