@@ -1,0 +1,1 @@
+{"compilerOptions":{"baseUrl":".","paths":{"@skillforge/router":["packages/router/src/index.ts"],"@skillforge/rules-engine":["packages/rules-engine/src/index.ts"],"@skillforge/skill-engine":["packages/skill-engine/src/index.ts"]}},"extends":"./tsconfig.base.json","include":["packages/*/src","packages/*/test","apps/web/src","apps/web/test","apps/desktop/src","apps/desktop/test"]}
