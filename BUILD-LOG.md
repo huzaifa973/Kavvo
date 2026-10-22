@@ -1321,3 +1321,140 @@ commit, ready to push the moment a GitHub repo exists for it.
 5. Only after the push is public: the viral-launch sequence from
    PLAN.md (demo material, launch posts) — separate work, not part of
    this repo prep.
+
+## 2026-10-22 — Voice stack: Kokoro out, faster-whisper in (`packages/voice`)
+
+**packages/voice — `@skillforge/voice`**
+
+PLAN.md's voice layer, proven end to end on this machine: free,
+local engines only — **Kokoro-82M** for speech out and
+**faster-whisper** for ears — behind one TypeScript interface, so
+surfaces never talk to Python directly.
+
+### Architecture
+
+- The engines are Python. The TypeScript package defines the
+  contract (`src/types.ts`): `VoiceEngine` with
+  `synthesize(text, { voice? }) -> { wavPath, seconds }` and
+  `transcribe(audioPath, { model? }) -> { text, language }`.
+- `PythonVoiceEngine` (`src/python-engine.ts`) spawns the package
+  venv's python on two small helpers and speaks one JSON line per
+  call with them:
+  - `python/tts.py --text ... --voice af_heart --out file.wav`
+    (Kokoro `KPipeline`; the voice id's first letter picks the
+    language pack) writes a 24 kHz mono WAV and prints
+    `{ ok, out, seconds }`.
+  - `python/stt.py --audio file.wav --model tiny` (faster-whisper,
+    CPU int8) prints `{ ok, text, language }`.
+  - A helper that exits non-zero, times out (10 min default; first
+    runs download weights), cannot be started, or prints no valid
+    result line surfaces as a typed `VoiceEngineError` carrying
+    the helper name and the tail of its stderr — the real cause
+    stays visible, nothing fails silently.
+- Output names come from a pure helper (`src/filename.ts`):
+  `tts-<slug>-<utc-timestamp>.wav`, slug built from the text
+  (diacritics stripped, capped at a word boundary), so repeated
+  syntheses never overwrite each other. The engine's work dir is
+  configurable; python path and helpers dir are overridable (the
+  tests use that to point at a fake executable).
+
+### Setup and install footprint
+
+- `python/setup.sh` creates `python/.venv` and installs the pinned
+  `python/requirements.txt`: torch 2.13.0, kokoro 0.9.4,
+  soundfile 0.14.0, faster-whisper 1.2.1, plus two compatibility
+  pins explained in the file (av 15.1.0 — faster-whisper 1.2.1
+  calls `av.open(..., metadata_errors="ignore")`, removed in PyAV
+  19; en-core-web-sm 3.8.0 — the spaCy model misaki otherwise
+  fetches on first English use). The script was run end to end
+  after the environment existed: a clean idempotent pass.
+- The venv is **5.5 GB** on disk. Honest accounting: most of that
+  is CUDA library packages (cudnn, cublas, nccl, ...) that the
+  PyPI torch wheel depends on. They sit unused — torch reports
+  `2.13.0+cu130, cuda: False` and runs on CPU. The ~200 MB
+  CPU-only wheel would avoid them, but its host
+  (download.pytorch.org) timed out repeatedly from this VM across
+  many retries while PyPI delivered at full speed, so PyPI is the
+  recorded route; setup.sh documents the lighter alternative.
+- Model weights live in the HuggingFace cache (**388 MB** total):
+  hexgrad/Kokoro-82M **313 MB** (weights + the af_heart voice +
+  config) and Systran/faster-whisper-tiny **75 MB**, both
+  downloaded on first use.
+- espeak-ng: Kokoro's English phonemizer runs on the
+  `espeakng-loader` wheel inside the venv — synthesis is proven
+  in this environment with **no system espeak-ng present**.
+  setup.sh still attempts the apt install as a best-effort
+  fallback (time-boxed, never fatal); from this VM apt is slow
+  enough that the step timed out and the bundled loader carried
+  the run, as designed.
+
+### Round-trip evidence (real, run on this machine)
+
+Source sentence: "Skillforge turns work into skills, and skills
+into finished work."
+
+- `tts.py` (voice af_heart) printed
+  `{"ok": true, "out": ".../skillforge.wav", "seconds": 4.375}`.
+  The WAV verified independently from its header: **210,044
+  bytes, 24,000 Hz, mono, 16-bit, 105,000 frames = 4.375 s** —
+  the helper's number and the file agree exactly.
+- `stt.py` (model tiny) printed
+  `{"ok": true, "text": "Skillforge turns work into skills and skills into finished work.", "language": "en"}`.
+  Word overlap against the source: **10/10 tokens, 100%** (the
+  only difference is the comma the recognizer does not emit).
+- The same round trip was then driven through the TypeScript
+  engine itself (real venv, not the fake): `synthesize` returned
+  `{"wavPath":".../tts-skillforge-turns-work-into-skills-and-skills-<timestamp>.wav","seconds":4.375}`
+  and `transcribe` on that file returned the same transcript and
+  `language: "en"`. Warm-cache timing: both helper runs together
+  took ~40 s wall on this 2-core VM, model loads included.
+- The evidence was produced twice with identical results: the
+  first run's artifacts sat in /tmp, which this VM wiped mid-work
+  (a tmpfs reset that also rolled back an apt-installed
+  espeak-ng); everything durable (venv, model cache) lives on the
+  home disk and survived, and the regenerated WAV is byte-size
+  identical (210,044 bytes).
+
+### Tests
+
+15 new voice tests, **228 total, all passing; typecheck clean.**
+The pre-existing 213 all still pass.
+
+- `test/filename.test.ts` (9): slug rules (punctuation,
+  diacritics, separator collapsing, empty fallback), the
+  word-boundary length cap, UTC timestamp formatting and
+  zero-padding, filename composition and fallback.
+- `test/python-engine.test.ts` (6): the engine against a FAKE
+  python (a tiny shell script emitting canned JSON that echoes
+  back the `--out` it was handed) — exact argv for synthesize
+  and transcribe (script, flags, defaults af_heart / tiny, the
+  workDir output path), JSON parsing into the typed results, a
+  failing helper (exit 3) surfacing as `VoiceEngineError` with
+  its stderr tail, and a missing executable surfacing the same
+  way. The real-engine proof above is deliberately NOT in the
+  suite: it needs the venv and downloaded models, so it was run
+  once as a temporary test, evidenced here, and removed.
+
+### Real vs stubbed
+
+- Real: both helpers against the real models, the engine's
+  process driving, JSON contract and error surfacing, the
+  filename helper, the pinned setup. The round trip above ran
+  on this machine, twice.
+- Stubbed/absent by design:
+  - **Chatterbox is not installed.** Voice cloning, emotion and
+    its 23 languages are future work; Kokoro is the v1 voice,
+    and voice selection is limited to Kokoro's voice list (the
+    `voice` option passes through unvalidated — a bad id
+    surfaces through Kokoro's error in the stderr tail).
+  - **Multilingual is unproven locally.** The only synthesis
+    and transcription proven here is English. Broader language
+    support rests on faster-whisper's and Chatterbox's
+    documented language coverage, not on a local run.
+  - No streaming synthesis or playback, and no wiring into the
+    web shell or the Electron desktop app yet — surfaces
+    consume `VoiceEngine` in a later piece. The shell remains
+    the integration point, as with the other packages.
+  - `.gitignore` gained a Python section (`.venv/`,
+    `__pycache__/`, `*.pyc`) so the 5.5 GB venv can never be
+    committed by accident (`git check-ignore` verified).
