@@ -28,3 +28,8 @@ Desktop.ini
 *.swp
 *.swo
 *~
+
+# Python (packages/voice engines)
+.venv/
+__pycache__/
+*.pyc
