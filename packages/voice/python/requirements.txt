@@ -1,0 +1,14 @@
+# Pinned to the versions installed and proven in this environment
+# (see BUILD-LOG.md, Voice section). torch comes from PyPI: its wheels
+# link CUDA libraries shipped as pip packages, which sit unused on
+# CPU-only machines.
+torch==2.13.0
+kokoro==0.9.4
+soundfile==0.14.0
+faster-whisper==1.2.1
+# faster-whisper 1.2.1 calls av.open(..., metadata_errors="ignore"),
+# a parameter PyAV 19 removed; 15.1.0 is the compatible line.
+av==15.1.0
+# misaki (Kokoro's English G2P) fetches this spaCy model on first
+# use; pinned here so setup is deterministic instead.
+en-core-web-sm==3.8.0
