@@ -1,0 +1,1 @@
+{"dependencies":{"playwright":"^1.64.1"},"exports":{".":"./src/index.ts"},"main":"./src/index.ts","name":"@skillforge/browser","private":true,"type":"module","types":"./src/index.ts","version":"0.1.0"}
