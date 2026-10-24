@@ -45,13 +45,13 @@ describe("SkillRegistry", () => {
 describe("text.word-count", () => {
   it("counts words, characters, sentences and paragraphs", async () => {
     const result = (await runSkill("text.word-count", {
-      text: "Hello world. This is Skillforge!\n\nIt counts things well?",
+      text: "Hello world. This is Kavvo!\n\nIt counts things well?",
     })) as WordCountResult;
     expect(result.words).toBe(9);
     expect(result.sentences).toBe(3);
     expect(result.paragraphs).toBe(2);
-    expect(result.characters).toBe(56);
-    expect(result.charactersNoSpaces).toBe(47);
+    expect(result.characters).toBe(51);
+    expect(result.charactersNoSpaces).toBe(42);
   });
 
   it("estimates reading time at 200 wpm", async () => {
@@ -73,9 +73,9 @@ describe("text.word-count", () => {
 describe("text.slugify", () => {
   it("turns a title into a URL slug", async () => {
     const result = (await runSkill("text.slugify", {
-      title: "Hello, World! This is Skillforge",
+      title: "Hello, World! This is Kavvo",
     })) as SlugifyResult;
-    expect(result.slug).toBe("hello-world-this-is-skillforge");
+    expect(result.slug).toBe("hello-world-this-is-kavvo");
   });
 
   it("strips accents and collapses separators", async () => {

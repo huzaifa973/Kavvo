@@ -1,4 +1,4 @@
-# Contributing to Skillforge
+# Contributing to Kavvo
 
 Thanks for helping build the agent that just does it. This guide is short
 on purpose — the codebase and its tests are the long version.

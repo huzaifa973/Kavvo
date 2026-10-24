@@ -1,5 +1,5 @@
 /**
- * Rules for one provider endpoint. Every model call in Skillforge must pass
+ * Rules for one provider endpoint. Every model call in Kavvo must pass
  * the RateGuard built from these rules before it touches a provider, so keys
  * and accounts stay inside the provider's published limits.
  */

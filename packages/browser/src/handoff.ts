@@ -57,7 +57,7 @@ export class HandoffTimeoutError extends Error {
 
   constructor(lastCheck: CheckResult, waitedMs: number) {
     super(
-      `@skillforge/browser: human handoff timed out after ${waitedMs}ms; ` +
+      `@kavvo/browser: human handoff timed out after ${waitedMs}ms; ` +
         `last check: ${lastCheck.kind} (${lastCheck.evidence})`,
     );
     this.name = "HandoffTimeoutError";

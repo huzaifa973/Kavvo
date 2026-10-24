@@ -30,7 +30,7 @@ import {
 } from "../../../packages/automations/src/index.js";
 
 /**
- * The assembled Skillforge core: one shared instance set the whole
+ * The assembled Kavvo core: one shared instance set the whole
  * shell runs on, so the HTTP surface, the automation runner and any
  * future surface (Electron, mobile) all see the same skills, jobs,
  * memories, forged skills and schedules.
@@ -48,13 +48,13 @@ import {
  * so a job or a schedule can call a forged skill from the first tick.
  */
 export interface CoreOptions {
-  /** Root data dir. The caller resolves SKILLFORGE_DATA_DIR / defaults. */
+  /** Root data dir. The caller resolves KAVVO_DATA_DIR / defaults. */
   dataDir: string;
   /** Registry to assemble over. Defaults to `createDefaultRegistry()`. */
   registry?: SkillRegistry;
 }
 
-export interface SkillforgeCore {
+export interface KavvoCore {
   dataDir: string;
   registry: SkillRegistry;
   composer: Composer;
@@ -75,7 +75,7 @@ export interface SkillforgeCore {
 /** Assemble the core over `options.dataDir`. Async: boot reloads forged skills. */
 export async function createCore(
   options: CoreOptions,
-): Promise<SkillforgeCore> {
+): Promise<KavvoCore> {
   const { dataDir } = options;
   const registry = options.registry ?? createDefaultRegistry();
 

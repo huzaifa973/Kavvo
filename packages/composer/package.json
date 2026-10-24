@@ -1,1 +1,1 @@
-{"dependencies":{"@skillforge/router":"*","@skillforge/skill-engine":"*"},"exports":{".":"./src/index.ts"},"main":"./src/index.ts","name":"@skillforge/composer","private":true,"type":"module","types":"./src/index.ts","version":"0.1.0"}
+{"dependencies":{"@kavvo/router":"*","@kavvo/skill-engine":"*"},"exports":{".":"./src/index.ts"},"main":"./src/index.ts","name":"@kavvo/composer","private":true,"type":"module","types":"./src/index.ts","version":"0.1.0"}

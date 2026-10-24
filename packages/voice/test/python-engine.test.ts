@@ -38,7 +38,7 @@ exit 3
 `;
 
 function makeFake(script: string): { pythonPath: string; logPath: string; dir: string } {
-  const dir = mkdtempSync(join(tmpdir(), "skillforge-voice-test-"));
+  const dir = mkdtempSync(join(tmpdir(), "kavvo-voice-test-"));
   const pythonPath = join(dir, "fake-python");
   writeFileSync(pythonPath, script);
   chmodSync(pythonPath, 0o755);

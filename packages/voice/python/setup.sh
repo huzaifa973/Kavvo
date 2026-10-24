@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-time setup for the @skillforge/voice Python engines.
+# One-time setup for the @kavvo/voice Python engines.
 #
 # Creates `python/.venv` and installs the pinned `requirements.txt`
 # (Kokoro 0.9.4, faster-whisper 1.2.1, soundfile, torch). Model

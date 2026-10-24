@@ -1,4 +1,4 @@
-import type { Skill } from "@skillforge/skill-engine";
+import type { Skill } from "@kavvo/skill-engine";
 import ts from "typescript";
 import { ForgeError, type SkillSpec } from "./types.js";
 import { buildInputSchema } from "./validate.js";

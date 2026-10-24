@@ -1,4 +1,4 @@
-# @skillforge/composer — Agent Composer
+# @kavvo/composer — Agent Composer
 
 Chains skills (and chat calls) into **jobs** and runs them with
 checkpoint + resume: the platform promise that tasks pause, never die.
@@ -67,7 +67,7 @@ new Composer({
 ```
 
 - The Composer depends only on the minimal `MemoryContextSource`
-  shape; `MemoryCore` from `@skillforge/memory-core` satisfies it
+  shape; `MemoryCore` from `@kavvo/memory-core` satisfies it
   structurally.
 - The query is derived from the job's **title** plus the step's
   **resolved** message contents — templates already substituted, so

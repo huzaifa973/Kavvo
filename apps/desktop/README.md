@@ -1,4 +1,4 @@
-# @skillforge/desktop — the Desktop Assistant app
+# @kavvo/desktop — the Desktop Assistant app
 
 An Electron wrapper around the web shell (`apps/web`). It boots the
 shell **in-process** on an ephemeral localhost port and shows it in a
@@ -16,11 +16,11 @@ npm start            # builds (tsc -> dist/ + asset copies), then launches Elect
 
 Environment:
 
-- `SKILLFORGE_DESKTOP_USER_DATA_DIR` — overrides both Electron's
+- `KAVVO_DESKTOP_USER_DATA_DIR` — overrides both Electron's
   `userData` and the shell's data dir. For smoke tests and portable
   runs; unset, data lives in the OS default (e.g.
-  `~/.config/@skillforge/desktop` on Linux).
-- `SKILLFORGE_DESKTOP_QUIT_AFTER_MS` — smoke hook: when set to a
+  `~/.config/@kavvo/desktop` on Linux).
+- `KAVVO_DESKTOP_QUIT_AFTER_MS` — smoke hook: when set to a
   positive number, the app quits itself that many ms after boot,
   through the normal clean-quit path (shell closed first).
 - The shell's own env still applies where relevant (the automation
@@ -44,7 +44,7 @@ Environment:
   Electron imports, so vitest covers them without a GUI.
 - `preload.cjs` is hand-written CommonJS — a sandboxed preload
   cannot be ESM — and exposes exactly one value to the page via the
-  context bridge: a frozen `window.skillforgeDesktop = { appVersion }`.
+  context bridge: a frozen `window.kavvoDesktop = { appVersion }`.
   The version reaches the preload through `additionalArguments`.
   The build (`scripts/copy-assets.mjs`) copies it next to the
   compiled main, and copies `apps/web/public` to
@@ -68,8 +68,8 @@ implemented yet.
 
 Configured in `package.json` (`build` key, electron-builder 26):
 
-- `appId` `dev.skillforge.app` — a PLACEHOLDER until the product
-  name/domain lock; `productName` `Skillforge`.
+- `appId` `dev.kavvo.app` — a PLACEHOLDER until the product
+  name/domain lock; `productName` `Kavvo`.
 - Windows target `nsis` (per-user, non-one-click), Linux target
   `AppImage`, output to `release/`, `npm run dist` wired as
   build + electron-builder.

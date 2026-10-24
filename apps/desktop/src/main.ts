@@ -56,14 +56,14 @@ async function boot(): Promise<void> {
     publicDir: resolvePublicDir(moduleDir),
   });
   console.log(
-    `skillforge desktop: shell listening on ${shell.url} (data dir: ${shell.dataDir})`,
+    `kavvo desktop: shell listening on ${shell.url} (data dir: ${shell.dataDir})`,
   );
   createWindow(shell.url);
 
   const quitAfterMs = parseQuitAfterMs(process.env[QUIT_AFTER_ENV]);
   if (quitAfterMs !== undefined) {
     console.log(
-      `skillforge desktop: ${QUIT_AFTER_ENV} set — quitting in ${quitAfterMs}ms`,
+      `kavvo desktop: ${QUIT_AFTER_ENV} set — quitting in ${quitAfterMs}ms`,
     );
     const timer = setTimeout(() => app.quit(), quitAfterMs);
     timer.unref();
@@ -84,7 +84,7 @@ function createWindow(url: string): void {
       sandbox: true,
       // The documented channel for handing the preload one value:
       // it arrives in the preload's process.argv.
-      additionalArguments: [`--skillforge-app-version=${app.getVersion()}`],
+      additionalArguments: [`--kavvo-app-version=${app.getVersion()}`],
     },
   });
   mainWindow.on("closed", () => {
@@ -96,13 +96,13 @@ function createWindow(url: string): void {
   mainWindow.webContents.once("did-finish-load", () => {
     void mainWindow?.webContents
       .executeJavaScript(
-        "typeof window.skillforgeDesktop === 'object' ? window.skillforgeDesktop.appVersion : 'missing'",
+        "typeof window.kavvoDesktop === 'object' ? window.kavvoDesktop.appVersion : 'missing'",
       )
       .then((version: unknown) => {
-        console.log(`skillforge desktop: preload bridge appVersion=${String(version)}`);
+        console.log(`kavvo desktop: preload bridge appVersion=${String(version)}`);
       })
       .catch((err: unknown) => {
-        console.error("skillforge desktop: preload bridge check failed", err);
+        console.error("kavvo desktop: preload bridge check failed", err);
       });
   });
 }
@@ -124,7 +124,7 @@ if (!gotSingleInstanceLock) {
     .whenReady()
     .then(boot)
     .catch((err: unknown) => {
-      console.error("skillforge desktop: boot failed", err);
+      console.error("kavvo desktop: boot failed", err);
       app.quit();
     });
 
@@ -151,10 +151,10 @@ if (!gotSingleInstanceLock) {
     running
       .close()
       .catch((err: unknown) => {
-        console.error("skillforge desktop: shell close failed", err);
+        console.error("kavvo desktop: shell close failed", err);
       })
       .finally(() => {
-        console.log("skillforge desktop: shell closed, exiting");
+        console.log("kavvo desktop: shell closed, exiting");
         app.quit();
       });
   });

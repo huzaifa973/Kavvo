@@ -1,4 +1,4 @@
-import { RateGuard, RateLimitedError } from "@skillforge/rules-engine";
+import { RateGuard, RateLimitedError } from "@kavvo/rules-engine";
 import { KeyRegistry } from "./key-registry.js";
 import {
   AllProvidersDownError,
@@ -25,7 +25,7 @@ function estimateTokens(messages: ChatMessage[]): number {
 }
 
 /**
- * The Brain Router (original code for Skillforge). Tries providers in
+ * The Brain Router (original code for Kavvo). Tries providers in
  * priority order; before each attempt it passes the Endpoint Rules guard,
  * and on a rate limit OR a provider failure it fails over to the next
  * provider instead of retry-hammering the same endpoint.

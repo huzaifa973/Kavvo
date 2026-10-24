@@ -1,4 +1,4 @@
-# @skillforge/voice
+# @kavvo/voice
 
 The free, local voice stack from PLAN.md: **Kokoro** for speech out,
 **faster-whisper** for ears. No per-character API bills, no audio

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { RateGuard } from "@skillforge/rules-engine";
+import { RateGuard } from "@kavvo/rules-engine";
 import {
   AllProvidersDownError,
   KeyRegistry,
@@ -51,7 +51,7 @@ describe("Router — failover", () => {
   });
 
   it("fails over when the provider itself throws a rate-limit error", async () => {
-    const { RateLimitedError } = await import("@skillforge/rules-engine");
+    const { RateLimitedError } = await import("@kavvo/rules-engine");
     const a = new MockProvider("alpha", {
       error: new RateLimitedError({
         provider: "alpha",

@@ -60,7 +60,7 @@ export class PythonVoiceEngine implements VoiceEngine {
     const pythonDir = packagePythonDir();
     this.pythonPath = opts.pythonPath ?? join(pythonDir, ".venv", "bin", "python");
     this.helpersDir = opts.helpersDir ?? pythonDir;
-    this.workDir = opts.workDir ?? join(tmpdir(), "skillforge-voice");
+    this.workDir = opts.workDir ?? join(tmpdir(), "kavvo-voice");
     this.timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     this.now = opts.now ?? (() => new Date());
   }

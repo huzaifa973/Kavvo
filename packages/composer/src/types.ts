@@ -1,5 +1,5 @@
-import type { ChatMessage, ChatOptions } from "@skillforge/router";
-import type { SkillContext } from "@skillforge/skill-engine";
+import type { ChatMessage, ChatOptions } from "@kavvo/router";
+import type { SkillContext } from "@kavvo/skill-engine";
 
 /**
  * Job model for the Agent Composer.
@@ -97,7 +97,7 @@ export interface ChatClient {
 
 /**
  * Minimal memory surface the Composer needs for chat-step context.
- * `MemoryCore` from @skillforge/memory-core satisfies this
+ * `MemoryCore` from @kavvo/memory-core satisfies this
  * structurally: `buildContext(query, { tokenBudget })` returns the
  * budgeted, relevance-ranked context string for a query, with ""
  * text when nothing relevant fits the budget. The Composer depends

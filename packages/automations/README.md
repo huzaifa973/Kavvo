@@ -1,4 +1,4 @@
-# @skillforge/automations — Automations
+# @kavvo/automations — Automations
 
 Schedules + triggers that run jobs: "daily 9am: post + report". The
 engine owns **when**; an injected runner owns **what**. This package

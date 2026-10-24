@@ -9,7 +9,7 @@ import { join } from "node:path";
  */
 
 /** Env override for the data dir (smoke tests, portable runs). */
-export const USER_DATA_ENV = "SKILLFORGE_DESKTOP_USER_DATA_DIR";
+export const USER_DATA_ENV = "KAVVO_DESKTOP_USER_DATA_DIR";
 
 /**
  * Env smoke hook: when set to a positive number of milliseconds, the
@@ -17,7 +17,7 @@ export const USER_DATA_ENV = "SKILLFORGE_DESKTOP_USER_DATA_DIR";
  * runs can exercise a genuinely clean quit (shell server closed via
  * the normal before-quit path) without a human clicking anything.
  */
-export const QUIT_AFTER_ENV = "SKILLFORGE_DESKTOP_QUIT_AFTER_MS";
+export const QUIT_AFTER_ENV = "KAVVO_DESKTOP_QUIT_AFTER_MS";
 
 /** Default BrowserWindow size. */
 export const DEFAULT_WINDOW_SIZE = { width: 1280, height: 800 } as const;

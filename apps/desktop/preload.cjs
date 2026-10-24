@@ -8,13 +8,13 @@
 // Electron objects cross the bridge.
 const { contextBridge } = require("electron");
 
-const VERSION_ARG = "--skillforge-app-version=";
+const VERSION_ARG = "--kavvo-app-version=";
 const versionArg = process.argv.find((arg) => arg.startsWith(VERSION_ARG));
 const appVersion = versionArg
   ? versionArg.slice(VERSION_ARG.length)
   : "unknown";
 
 contextBridge.exposeInMainWorld(
-  "skillforgeDesktop",
+  "kavvoDesktop",
   Object.freeze({ appVersion }),
 );

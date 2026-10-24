@@ -6,9 +6,9 @@ const pkg = (name: string) =>
 export default defineConfig({
   resolve: {
     alias: {
-      "@skillforge/rules-engine": pkg("rules-engine"),
-      "@skillforge/router": pkg("router"),
-      "@skillforge/skill-engine": pkg("skill-engine"),
+      "@kavvo/rules-engine": pkg("rules-engine"),
+      "@kavvo/router": pkg("router"),
+      "@kavvo/skill-engine": pkg("skill-engine"),
     },
   },
   test: {

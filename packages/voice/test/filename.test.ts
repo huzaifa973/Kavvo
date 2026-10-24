@@ -41,8 +41,8 @@ describe("buildWavFilename", () => {
   const now = new Date("2026-10-22T08:15:30.000Z");
 
   it("combines slug and timestamp", () => {
-    expect(buildWavFilename("Skillforge turns work into skills", now)).toBe(
-      "tts-skillforge-turns-work-into-skills-20261022T081530.wav",
+    expect(buildWavFilename("Kavvo turns work into skills", now)).toBe(
+      "tts-kavvo-turns-work-into-skills-20261022T081530.wav",
     );
   });
 

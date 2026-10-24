@@ -1,4 +1,4 @@
-# @skillforge/memory-core — Memory Core
+# @kavvo/memory-core — Memory Core
 
 Strong long-term memory with a strict token budget. The store may hold
 thousands of memories about the user (facts, preferences, people,
@@ -108,7 +108,7 @@ what the user remembers.
 ## Usage
 
 ```ts
-import { FileMemoryStore, MemoryCore } from "@skillforge/memory-core";
+import { FileMemoryStore, MemoryCore } from "@kavvo/memory-core";
 
 const core = new MemoryCore(new FileMemoryStore("./data/memory"));
 await core.store.add({

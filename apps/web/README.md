@@ -1,7 +1,7 @@
-# @skillforge/web — the app shell
+# @kavvo/web — the app shell
 
 A local HTTP server (Node's built-in `http`, no runtime dependencies)
-plus a single-page UI that runs the assembled Skillforge core end to
+plus a single-page UI that runs the assembled Kavvo core end to
 end. One shared instance set (see `src/core.ts`) serves everything:
 the Skill Engine's skills (built-ins plus forged skills, which are
 reloaded from disk at boot), the Agent Composer's checkpointed jobs,
@@ -23,11 +23,11 @@ Environment:
 
 - `PORT` — listen port (default 4317). Host is 127.0.0.1: this is a
   local shell, not a hosted service.
-- `SKILLFORGE_DATA_DIR` — the data dir. Layout: `<dir>/jobs/` (job
+- `KAVVO_DATA_DIR` — the data dir. Layout: `<dir>/jobs/` (job
   checkpoints), `<dir>/memory/`, `<dir>/forge/` (forged-skill
   records), `<dir>/automations/` (schedules). Default: `.data/`
   under the directory the server was started from.
-- `SKILLFORGE_AUTOMATION_INTERVAL_MS` — how often the automation
+- `KAVVO_AUTOMATION_INTERVAL_MS` — how often the automation
   engine ticks while the shell runs, so schedules fire (default
   30000). Zero or negative disables ticking.
 
@@ -67,7 +67,7 @@ is a clean 400. Anything else under `/` is served from `public/`.
   Core, forge store + boot reload, AutomationEngine whose runner
   executes `schedule.job` through the Composer). `src/server.ts`
   is the HTTP surface over it. Both import the core packages by
-  relative path, not the `@skillforge/*` aliases, so the tsc output
+  relative path, not the `@kavvo/*` aliases, so the tsc output
   in `dist/` is a self-contained tree plain Node can run — no
   bundler, no type-stripping at run time.
 - The UI (`public/`) is vanilla JS with no build step. Its colors are

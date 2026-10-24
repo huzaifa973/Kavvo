@@ -83,7 +83,7 @@ export async function click(
   const box = await locator.boundingBox();
   if (!box) {
     throw new Error(
-      "@skillforge/browser: cannot click an element with no bounding box (not visible?)",
+      "@kavvo/browser: cannot click an element with no bounding box (not visible?)",
     );
   }
   const rng = options.rng ?? Math.random;

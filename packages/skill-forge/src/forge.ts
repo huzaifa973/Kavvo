@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
-import type { Skill, SkillRegistry } from "@skillforge/skill-engine";
+import type { Skill, SkillRegistry } from "@kavvo/skill-engine";
 import { buildSkill, compileSpec } from "./compile.js";
 import type { ForgeStore } from "./store.js";
 import { assertValidRecord, assertValidSpec, specHash } from "./validate.js";
