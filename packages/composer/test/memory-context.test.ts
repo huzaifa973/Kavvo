@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { MockProvider, Router, type ChatMessage } from "@skillforge/router";
-import { createDefaultRegistry } from "@skillforge/skill-engine";
+import { MockProvider, Router, type ChatMessage } from "@kavvo/router";
+import { createDefaultRegistry } from "@kavvo/skill-engine";
 import {
   InMemoryMemoryStore,
   MemoryCore,

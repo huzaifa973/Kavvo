@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { RateGuard, RateLimitedError } from "@skillforge/rules-engine";
+import { RateGuard, RateLimitedError } from "@kavvo/rules-engine";
 import {
   KeyRegistry,
   MockProvider,

@@ -1,4 +1,4 @@
-import { RateLimitedError } from "@skillforge/rules-engine";
+import { RateLimitedError } from "@kavvo/rules-engine";
 import { KeyRegistry } from "./key-registry.js";
 import type {
   ChatMessage,

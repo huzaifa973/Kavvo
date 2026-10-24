@@ -27,7 +27,7 @@ function mulberry32(seed: number): Rng {
 // every mousemove is recorded with a timestamp, the button records its
 // clicks, and there is a text input to type into.
 const FIXTURE_HTML = `<!doctype html>
-<html><head><meta charset="utf-8"><title>skillforge browser fixture</title></head>
+<html><head><meta charset="utf-8"><title>kavvo browser fixture</title></head>
 <body style="margin:0">
 <button id="btn" style="position:absolute;left:320px;top:220px;width:140px;height:48px">Do the thing</button>
 <input id="field" style="position:absolute;left:60px;top:60px;width:340px;height:34px" type="text">
@@ -82,7 +82,7 @@ async function withSession<T>(
 }
 
 async function tempProfile(): Promise<string> {
-  return mkdtemp(join(tmpdir(), "skillforge-browser-"));
+  return mkdtemp(join(tmpdir(), "kavvo-browser-"));
 }
 
 describe("Real-Human Browser (live Chromium, fixture page)", () => {
@@ -195,7 +195,7 @@ describe("Real-Human Browser (live Chromium, fixture page)", () => {
         await withSession(profileDir, async (session) => {
           await session.goto(fixtureUrl);
           await session.page.evaluate(
-            "localStorage.setItem('skillforge-marker', 'still-here')",
+            "localStorage.setItem('kavvo-marker', 'still-here')",
           );
         });
         // A brand-new launch on the same profile dir is a new browser
@@ -204,7 +204,7 @@ describe("Real-Human Browser (live Chromium, fixture page)", () => {
         await withSession(profileDir, async (session) => {
           await session.goto(fixtureUrl);
           const value = (await session.page.evaluate(
-            "localStorage.getItem('skillforge-marker')",
+            "localStorage.getItem('kavvo-marker')",
           )) as string | null;
           expect(value).toBe("still-here");
         });

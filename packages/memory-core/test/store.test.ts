@@ -187,7 +187,7 @@ describe("save (raw upsert)", () => {
   const raw: MemoryItem = {
     id: "hand-1",
     kind: "project",
-    text: "Skillforge launch plan",
+    text: "Kavvo launch plan",
     tags: ["work"],
     importance: 4,
     createdAt: new Date(T0).toISOString(),

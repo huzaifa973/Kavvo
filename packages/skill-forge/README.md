@@ -1,4 +1,4 @@
-# @skillforge/skill-forge — Skill Forge
+# @kavvo/skill-forge — Skill Forge
 
 AI builds a NEW skill when a user asks for something missing; the
 skill is saved forever and is instant for everyone. This package is

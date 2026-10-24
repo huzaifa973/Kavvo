@@ -1,12 +1,16 @@
-# Skillforge — Master Plan (codename; user to confirm name)
+# Kavvo — Master Plan
 Created 2026-10-21. Owner: Huzaifa Suleman. Builder: Graze.
 
 ## The idea in one line
 One AI platform that DOES work instead of browsing for it — skill-first agent, real-human browser, layered check handling, one brain across everything. "OpenClaw browses. Ours just does it." / "Other agents get blocked. Ours finishes."
 
-## Name (proposed)
-- Primary: **Skillforge** — skills are forged/added; dev-respectable, global.
-- Alternates: Unblockd (the anti-block wedge), Karo ("do it").
+## Name — LOCKED: Kavvo
+- **Kavvo** — the name is LOCKED, by the user's decision on 2026-10-24.
+  A coined name with no prior meaning; brand-clean. (Working codename
+  until the lock: "Skillforge" — retired across the repo the same day.)
+- Domain: purchase pending — the user is buying within a day or two.
+  Prices verified on Porkbun (2026-10-22): kavvo.xyz ~PKR 573 yr1,
+  kavvo.io $28.12 yr1, kavvo.ai $82.70/yr.
 - Tagline: "The agent that just does it."
 
 ## What goes inside (every module)

@@ -1,4 +1,4 @@
-# @skillforge/browser — Real-Human Browser
+# @kavvo/browser — Real-Human Browser
 
 The browser layer, used only when a task truly needs the web. It drives
 Chromium the way a person does, because behavior-scored checks (and

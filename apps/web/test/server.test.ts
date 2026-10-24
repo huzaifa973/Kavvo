@@ -29,7 +29,7 @@ let dataDir: string;
 let base: string;
 
 beforeAll(async () => {
-  dataDir = await mkdtemp(join(tmpdir(), "skillforge-web-test-"));
+  dataDir = await mkdtemp(join(tmpdir(), "kavvo-web-test-"));
   shell = await startWebShell({
     port: 0,
     dataDir,
@@ -66,7 +66,7 @@ describe("web shell API", () => {
     const response = await fetch(`${base}/`);
     expect(response.status).toBe(200);
     expect(response.headers.get("content-type")).toContain("text/html");
-    expect(await response.text()).toContain("Skillforge");
+    expect(await response.text()).toContain("Kavvo");
   });
 
   it("lists exactly the 13 built-in skills", async () => {
@@ -86,10 +86,10 @@ describe("web shell API", () => {
 
   it("runs slugify end to end over HTTP", async () => {
     const { status, data } = await postJson("/api/skills/text.slugify/run", {
-      title: "Hello Skillforge World",
+      title: "Hello Kavvo World",
     });
     expect(status).toBe(200);
-    expect(data).toEqual({ result: { slug: "hello-skillforge-world" } });
+    expect(data).toEqual({ result: { slug: "hello-kavvo-world" } });
   });
 
   it("returns 404 for an unknown skill", async () => {
@@ -130,7 +130,7 @@ describe("web shell API", () => {
           id: "make-slug",
           kind: "skill",
           skillId: "text.slugify",
-          input: { title: "Hello Skillforge World" },
+          input: { title: "Hello Kavvo World" },
         },
         {
           id: "count",
@@ -147,12 +147,12 @@ describe("web shell API", () => {
     expect(job.steps[0]).toMatchObject({
       id: "make-slug",
       status: "completed",
-      output: { slug: "hello-skillforge-world" },
+      output: { slug: "hello-kavvo-world" },
     });
     expect(job.steps[1]).toMatchObject({
       id: "count",
       status: "completed",
-      output: { words: 1, characters: 22 },
+      output: { words: 1, characters: 17 },
     });
 
     const readBack = await fetch(`${base}/api/jobs/${job.id}`);
@@ -160,7 +160,7 @@ describe("web shell API", () => {
     const persisted = (await readBack.json()) as JobState;
     expect(persisted.id).toBe(job.id);
     expect(persisted.status).toBe("completed");
-    expect(persisted.steps[1].output).toMatchObject({ characters: 22 });
+    expect(persisted.steps[1].output).toMatchObject({ characters: 17 });
   });
 
   it("resumes a completed job without changing it, and 404s unknown jobs", async () => {

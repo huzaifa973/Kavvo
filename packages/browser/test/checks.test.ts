@@ -124,7 +124,7 @@ async function withSession<T>(
 }
 
 async function tempProfile(): Promise<string> {
-  return mkdtemp(join(tmpdir(), "skillforge-checks-"));
+  return mkdtemp(join(tmpdir(), "kavvo-checks-"));
 }
 
 async function onPage<T>(

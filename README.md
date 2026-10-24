@@ -1,10 +1,10 @@
-# Skillforge
+# Kavvo
 
 **The agent that just does it.** One AI platform that *does* work instead of
 browsing for it — skill-first, with a real-human browser for the web work that
 truly needs one, and one brain across desktop, web and mobile.
 
-> **Skillforge** is a codename — the final product name is still pending.
+> **Kavvo** is a codename — the final product name is still pending.
 > Other agents get blocked. Ours finishes.
 
 ## Status
@@ -118,18 +118,18 @@ npx playwright install chromium           # add --with-deps on Linux CI
 ### Run the web shell
 
 ```bash
-npm run build --workspace=@skillforge/web
-npm start --workspace=@skillforge/web
+npm run build --workspace=@kavvo/web
+npm start --workspace=@kavvo/web
 ```
 
 Then open <http://127.0.0.1:4317> (port from `PORT`, default 4317; the
 server binds localhost only). Data persists under `.data/` by default —
-override with `SKILLFORGE_DATA_DIR`.
+override with `KAVVO_DATA_DIR`.
 
 ### Run the desktop app
 
 ```bash
-npm start --workspace=@skillforge/desktop
+npm start --workspace=@kavvo/desktop
 ```
 
 This builds the shell and launches the Electron app, with all data in the
