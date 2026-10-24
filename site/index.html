@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kavvo — The agent that just does it</title>
+<meta name="description" content="Kavvo is a skill-first, all-in-one AI agent platform. Bring your own API keys, run real skills, and let one agent do the work — open source and free.">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<style>
+  :root{
+    --bg:#ffffff; --fg:#0a0a0a; --muted:#5c5c5c; --card:#f6f6f6;
+    --line:#e5e5e5; --btn-bg:#0a0a0a; --btn-fg:#ffffff;
+  }
+  [data-theme="dark"]{
+    --bg:#0a0a0a; --fg:#f5f5f5; --muted:#a3a3a3; --card:#141414;
+    --line:#262626; --btn-bg:#f5f5f5; --btn-fg:#0a0a0a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 20px}
+  header{border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:12px;padding:16px 0}
+  .nav .logo{width:34px;height:34px;color:var(--fg);flex:none}
+  .nav .brand{font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
+  .nav .spacer{flex:1}
+  .nav a.link{color:var(--muted);text-decoration:none;margin-right:20px;font-size:.95rem}
+  .nav a.link:hover{color:var(--fg)}
+  #theme-toggle{background:none;border:1px solid var(--line);border-radius:999px;
+    color:var(--fg);cursor:pointer;font-size:.85rem;padding:6px 14px}
+  .hero{text-align:center;padding:84px 0 64px}
+  .hero .logo{width:148px;height:148px;margin:0 auto 28px;color:var(--fg)}
+  .hero h1{font-size:2.9rem;line-height:1.12;letter-spacing:-.03em;font-weight:800}
+  .hero p.lede{color:var(--muted);font-size:1.2rem;max-width:640px;margin:20px auto 34px}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;text-decoration:none;font-weight:600;font-size:1rem;
+    padding:13px 26px;border-radius:10px;border:1px solid var(--btn-bg)}
+  .btn.primary{background:var(--btn-bg);color:var(--btn-fg)}
+  .btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+  .hero .note{color:var(--muted);font-size:.88rem;margin-top:16px}
+  section{padding:56px 0}
+  section h2{font-size:1.8rem;letter-spacing:-.02em;text-align:center;margin-bottom:10px}
+  section .sub{color:var(--muted);text-align:center;max-width:620px;margin:0 auto 38px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+  .card h3{font-size:1.08rem;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.95rem}
+  .download{text-align:center;border-top:1px solid var(--line)}
+  .pricing .card{text-align:center}
+  .pricing .price{font-size:2rem;font-weight:800;margin:6px 0}
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:.9rem}
+  footer .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  footer .spacer{flex:1}
+  @media (max-width:560px){.hero h1{font-size:2.1rem}.hero{padding:56px 0 40px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Kavvo logo"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" pathLength="360" stroke-dasharray="300 60" transform="rotate(75 50 50)"/><circle cx="69.7" cy="63.8" r="5.5" fill="currentColor"/></svg>
+    <span class="brand">Kavvo</span>
+    <span class="spacer"></span>
+    <a class="link" href="#features">Features</a>
+    <a class="link" href="#download">Download</a>
+    <a class="link" href="#pricing">Pricing</a>
+    <a class="link" href="https://github.com/huzaifa973/Kavvo">GitHub</a>
+    <button id="theme-toggle" type="button" aria-label="Toggle dark theme">Dark</button>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Kavvo — open ring orb logo"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" pathLength="360" stroke-dasharray="300 60" transform="rotate(75 50 50)"/><circle cx="69.7" cy="63.8" r="5.5" fill="currentColor"/></svg>
+    <h1>The agent that just does it.</h1>
+    <p class="lede">Kavvo is a skill-first, all-in-one AI agent platform. Other agents browse
+      for answers — Kavvo runs real skills, chains them into finished work, and remembers
+      how you like things done. Bring your own API keys and pay nothing for the platform.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/huzaifa973/Kavvo/releases">Download for Windows</a>
+      <a class="btn ghost" href="https://github.com/huzaifa973/Kavvo">View on GitHub</a>
+    </div>
+    <p class="note">Free &amp; open source (MIT) · Windows desktop app · Your keys, your machine, your data</p>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <h2>One platform, every job</h2>
+      <p class="sub">Skills do the small work instantly. The composer chains them into big jobs.
+        The browser steps in only when a task truly needs the web.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Skill Engine</h3>
+          <p>Native skills — media converters, PDF tools, summarizer, translator, writer,
+            web researcher, form filler, file organizer and more — run instantly on your
+            machine. No page-hopping, no waiting. Missing a skill? The Skill Forge builds it.</p>
+        </div>
+        <div class="card">
+          <h3>Agent Composer</h3>
+          <p>Chain skills into one job: “turn this PDF into a video and post it.” Every task
+            is checkpointed, so long jobs resume exactly where they stopped — never start over.</p>
+        </div>
+        <div class="card">
+          <h3>Brain Router — your keys</h3>
+          <p>Plug in your own API keys (Gemini, Groq, OpenAI, local Ollama — your choice).
+            A built-in rules engine respects every provider's limits, backs off politely,
+            and fails over to the next key or model instead of hammering. Your keys stay alive,
+            and our inference cost stays zero — so the app stays free.</p>
+        </div>
+        <div class="card">
+          <h3>Real-Human Browser</h3>
+          <p>When a task truly needs the web, Kavvo drives your real browser like a person —
+            real mouse paths, human typing, your logged-in sessions. Other agents get blocked.
+            Kavvo finishes.</p>
+        </div>
+        <div class="card">
+          <h3>Voice</h3>
+          <p>Talk to it, hear it back. Local speech recognition and natural voices run on
+            your own hardware — including voice cloning — at zero per-minute cost.</p>
+        </div>
+        <div class="card">
+          <h3>Memory Core</h3>
+          <p>Kavvo remembers your facts, preferences, files and projects — and retrieves only
+            what each task needs. Smarter answers, lower token bills, across desktop, web
+            and mobile: one brain, one identity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" class="download">
+    <div class="wrap">
+      <h2>Download Kavvo</h2>
+      <p class="sub">Windows desktop app — full power: device control, local models, your files.
+        Grab the portable zip (unzip and run, nothing to install) or the installer from GitHub Releases.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/huzaifa973/Kavvo/releases">Get it from GitHub Releases</a>
+      </div>
+      <p class="note" style="color:var(--muted);font-size:.88rem;margin-top:16px">
+        Latest builds, release notes and checksums live on the Releases page.</p>
+    </div>
+  </section>
+
+  <section id="pricing" class="pricing">
+    <div class="wrap">
+      <h2>Pricing</h2>
+      <p class="sub">The local app is free forever. You bring your own API keys, so there is
+        no platform inference bill — ever.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Kavvo Local</h3>
+          <div class="price">$0</div>
+          <p>Full desktop app, all skills, composer, browser, voice and memory.
+            Open source under MIT. You only pay your own AI providers — most offer
+            generous free tiers.</p>
+        </div>
+        <div class="card">
+          <h3>Kavvo Hosted</h3>
+          <div class="price">Coming later</div>
+          <p>An always-on cloud agent — your keys running on our servers, reachable from
+            anywhere — launching only once demand is proven. Join via GitHub to hear first.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Kavvo — built by Huzaifa Suleman. Open source (MIT).</span>
+    <span class="spacer"></span>
+    <a href="https://github.com/huzaifa973/Kavvo">GitHub</a>
+    <a href="https://github.com/huzaifa973/Kavvo/releases">Releases</a>
+    <a href="https://github.com/huzaifa973/Kavvo/issues">Demand Board — request a skill</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var root=document.documentElement, btn=document.getElementById('theme-toggle');
+    function apply(t){ root.setAttribute('data-theme',t); btn.textContent = t==='dark' ? 'Light' : 'Dark'; }
+    var saved=null;
+    try{ saved=localStorage.getItem('kavvo-theme'); }catch(e){}
+    if(saved){ apply(saved); }
+    else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ apply('dark'); }
+    else { apply('light'); }
+    btn.addEventListener('click',function(){
+      var next = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+      apply(next);
+      try{ localStorage.setItem('kavvo-theme',next); }catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>

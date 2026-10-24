@@ -1,0 +1,3 @@
+# Kavvo launch site
+
+A dependency-free static landing page for Kavvo (`index.html` + `assets/` — no build step, no framework). Deploy it on Cloudflare Pages by creating a Pages project pointed at this repository with **Build command: (none / empty)** and **Build output directory: `site`** — Cloudflare then serves `index.html` and the logo assets as-is. Once the `kavvo.xyz` domain is purchased, attach it under the Pages project's **Custom domains** tab (Cloudflare adds the DNS record automatically when the domain is in the same account), and the site goes live at `https://kavvo.xyz` with HTTPS on by default.
