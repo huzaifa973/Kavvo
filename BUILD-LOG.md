@@ -1558,3 +1558,69 @@ recording `ChatClient` stub, and one real Router + MockProvider:
   delimiter lines add a fixed ~20 estimated tokens on top, outside
   the budget — callers needing a hard whole-message cap should
   leave that much headroom.
+
+## 2026-10-24 — Brand lock: the Skillforge codename is retired, the product is Kavvo
+
+**Repo-wide rename — package scope, identifiers, and brand strings**
+
+The user locked the product name today (2026-10-24): the platform
+is **Kavvo**, permanently. "Skillforge" was only ever the working
+codename, and it has been removed from the codebase in one pass.
+PLAN.md's Name section now records the lock (domain purchase
+pending — the user is buying within a day or two; the Porkbun
+prices verified 2026-10-22 are kept there).
+
+### What was renamed
+
+- **Package scope** — every `@skillforge/<pkg>` is now
+  `@kavvo/<pkg>`: all workspace `package.json` name fields and
+  cross-package dependency entries, every import/export specifier
+  in src and test files, the `tsconfig.json` path mappings, and
+  the `vitest.config.ts` aliases. Root package name `skillforge`
+  -> `kavvo`. Apps included: `@kavvo/desktop`, `@kavvo/web`
+  (apps/mobile is a README-only placeholder, no package yet).
+- **Identifiers that carried the codename** — env vars
+  `SKILLFORGE_DATA_DIR`, `SKILLFORGE_AUTOMATION_INTERVAL_MS`,
+  `SKILLFORGE_DESKTOP_USER_DATA_DIR`,
+  `SKILLFORGE_DESKTOP_QUIT_AFTER_MS` are now `KAVVO_*`; the web
+  shell's `SkillforgeCore` type is `KavvoCore`; the desktop
+  preload bridge `window.skillforgeDesktop` is
+  `window.kavvoDesktop` (with its `--kavvo-app-version=` arg);
+  test temp-dir prefixes and the voice workDir default
+  (`kavvo-voice`) likewise.
+- **Brand strings** — README.md, PLAN.md, CONTRIBUTING.md, the
+  package/app READMEs, the web shell's HTML title and heading,
+  and the desktop app's `productName` ("Kavvo") and placeholder
+  `appId` (`dev.kavvo.app`) all say Kavvo now.
+- **package-lock.json regenerated** with `npm install`
+  (`ELECTRON_SKIP_BINARY_DOWNLOAD=1`): root name `kavvo`, all 11
+  workspace entries under `@kavvo/*`, zero codename references
+  left in the lock.
+
+### Tests
+
+**237 total, all passing; typecheck clean** — the same count as
+before the rename. Three expectations changed, all of them
+character counts of sample strings that contain the brand name
+("Kavvo" is 5 letters, the codename was 10): the word-count
+skill test (56 -> 51 characters, 47 -> 42 without spaces) and
+the web shell 2-step job test (22 -> 17, asserted twice — live
+output and persisted read-back). Tests that assert brand-derived
+strings (the voice filename slug test, the slugify end-to-end
+test, the desktop env/bridge tests) were updated with the
+rename and pass as before.
+
+### Real vs stubbed
+
+- Real: the rename itself — imports resolve through the new
+  scope via tsconfig paths, vitest aliases, and the regenerated
+  lockfile's workspace links (the live Chromium browser tests
+  and the full suite run against `@kavvo/*` throughout).
+- Deliberately untouched: this log's earlier entries (history —
+  the codename still appears there, and in PLAN.md's one-line
+  record of what the codename was), git history, and the local
+  working directory name (`~/workspace/skillforge`, an internal
+  path, not part of the product).
+- Not present in the repo: `docs/PRODUCT-VISION.md` and
+  `docs/USER-GUIDE.md` do not exist (the `docs/` directory is
+  empty), so there was nothing to rename there.
