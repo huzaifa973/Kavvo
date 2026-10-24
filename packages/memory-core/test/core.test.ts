@@ -284,7 +284,7 @@ describe("MemoryCore.compress", () => {
     const u2 = makeItem({
       id: "u2",
       kind: "project",
-      text: "Skillforge launch plan",
+      text: "Kavvo launch plan",
       importance: 4,
     });
     const { store, core } = await seededCore([d1, d2, d3, u1, u2]);

@@ -6,7 +6,7 @@ import {
   SkillNotFoundError,
   SkillRegistry,
   createDefaultRegistry,
-} from "@skillforge/skill-engine";
+} from "@kavvo/skill-engine";
 import {
   FileForgeStore,
   ForgeError,

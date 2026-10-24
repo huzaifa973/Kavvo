@@ -10,7 +10,7 @@ import { dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // The shell imports the core packages by relative path (not the
-// @skillforge/* aliases) on purpose: tsc then emits a self-contained
+// @kavvo/* aliases) on purpose: tsc then emits a self-contained
 // dist/ tree whose imports Node can resolve directly, with no bundler
 // and no type-stripping involved at run time.
 import {
@@ -47,7 +47,7 @@ import {
   type SkillSampleCase,
   type SkillSpec,
 } from "../../../packages/skill-forge/src/index.js";
-import { createCore, type SkillforgeCore } from "./core.js";
+import { createCore, type KavvoCore } from "./core.js";
 
 /** Bodies larger than this are rejected with 413 before any parsing. */
 export const MAX_BODY_BYTES = 1_000_000;
@@ -60,7 +60,7 @@ export interface WebShellOptions {
   registry?: SkillRegistry;
   /**
    * Data dir the core persists under (`<dataDir>/jobs`, `/memory`,
-   * `/forge`, `/automations`). Defaults to `SKILLFORGE_DATA_DIR` or
+   * `/forge`, `/automations`). Defaults to `KAVVO_DATA_DIR` or
    * `<cwd>/.data`.
    */
   dataDir?: string;
@@ -68,7 +68,7 @@ export interface WebShellOptions {
   publicDir?: string;
   /**
    * Milliseconds between automation ticks (`engine.tick()`) while the
-   * shell runs. Defaults to `SKILLFORGE_AUTOMATION_INTERVAL_MS` or
+   * shell runs. Defaults to `KAVVO_AUTOMATION_INTERVAL_MS` or
    * 30_000. Zero or negative disables ticking — tests use that to stay
    * deterministic.
    */
@@ -78,7 +78,7 @@ export interface WebShellOptions {
 export interface WebShell {
   server: Server;
   /** The one assembled core every handler (and surface) shares. */
-  core: SkillforgeCore;
+  core: KavvoCore;
   composer: Composer;
   registry: SkillRegistry;
   memory: MemoryCore;
@@ -120,12 +120,12 @@ function defaultPublicDir(): string {
 }
 
 function defaultDataDir(): string {
-  return process.env.SKILLFORGE_DATA_DIR ?? join(process.cwd(), ".data");
+  return process.env.KAVVO_DATA_DIR ?? join(process.cwd(), ".data");
 }
 
 function resolveAutomationIntervalMs(option?: number): number {
   if (option !== undefined) return option;
-  const raw = process.env.SKILLFORGE_AUTOMATION_INTERVAL_MS;
+  const raw = process.env.KAVVO_AUTOMATION_INTERVAL_MS;
   if (raw !== undefined) {
     const parsed = Number(raw);
     if (Number.isFinite(parsed)) return parsed;
@@ -167,7 +167,7 @@ export async function createWebShell(
       if (err instanceof HttpError) {
         sendJson(res, err.status, { error: err.message });
       } else {
-        console.error("skillforge web shell: unexpected error", err);
+        console.error("kavvo web shell: unexpected error", err);
         sendJson(res, 500, {
           error: `Internal error: ${err instanceof Error ? err.message : String(err)}`,
         });
@@ -200,7 +200,7 @@ export async function startWebShell(
   if (shell.automationIntervalMs > 0) {
     timer = setInterval(() => {
       void shell.core.tickAutomations().catch((err: unknown) => {
-        console.error("skillforge web shell: automation tick failed", err);
+        console.error("kavvo web shell: automation tick failed", err);
       });
     }, shell.automationIntervalMs);
     timer.unref();
@@ -700,6 +700,6 @@ if (invokedDirectly) {
     console.warn(`Forged skill skipped at boot (${skip.id}): ${skip.reason}`);
   }
   console.log(
-    `Skillforge web shell listening on ${shell.url} (data dir: ${shell.dataDir})`,
+    `Kavvo web shell listening on ${shell.url} (data dir: ${shell.dataDir})`,
   );
 }

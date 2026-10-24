@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { ChatMessage } from "@skillforge/router";
+import type { ChatMessage } from "@kavvo/router";
 import type { JobStore } from "./store.js";
 import { resolveTemplates } from "./template.js";
 import {
@@ -15,7 +15,7 @@ import {
 } from "./types.js";
 
 export interface ComposerOptions {
-  /** Skill executor. A `SkillRegistry` from @skillforge/skill-engine fits directly. */
+  /** Skill executor. A `SkillRegistry` from @kavvo/skill-engine fits directly. */
   skills: SkillRunner;
   /** Chat surface for `kind: "chat"` steps. The Brain Router fits directly. */
   chat?: ChatClient;

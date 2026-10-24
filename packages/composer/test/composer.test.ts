@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { MockProvider, Router } from "@skillforge/router";
+import { MockProvider, Router } from "@kavvo/router";
 import {
   SkillRegistry,
   createDefaultRegistry,
@@ -11,7 +11,7 @@ import {
   type Skill,
   type SkillContext,
   type WordCountResult,
-} from "@skillforge/skill-engine";
+} from "@kavvo/skill-engine";
 import {
   Composer,
   FileJobStore,
@@ -359,7 +359,7 @@ describe("Composer failure and resume", () => {
 
 describe("FileJobStore restart survival", () => {
   it("a second Composer over the same directory resumes a failed job after a restart", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "skillforge-composer-"));
+    const dir = await mkdtemp(join(tmpdir(), "kavvo-composer-"));
     try {
       const definition = {
         steps: [
@@ -442,7 +442,7 @@ describe("Job stores", () => {
   });
 
   it("FileJobStore returns undefined for unknown jobs and lists saved ones", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "skillforge-store-"));
+    const dir = await mkdtemp(join(tmpdir(), "kavvo-store-"));
     try {
       const store = new FileJobStore(dir);
       expect(await store.get("nope")).toBeUndefined();

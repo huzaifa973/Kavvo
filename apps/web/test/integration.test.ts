@@ -37,7 +37,7 @@ let dataDir: string;
 let base: string;
 
 beforeAll(async () => {
-  dataDir = await mkdtemp(join(tmpdir(), "skillforge-integration-test-"));
+  dataDir = await mkdtemp(join(tmpdir(), "kavvo-integration-test-"));
   // Pre-seed a forged skill into the data dir's forge store, so the
   // boot test proves loadForged re-registers it into the shell's
   // registry before the first request is served.

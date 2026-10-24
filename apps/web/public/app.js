@@ -1,4 +1,4 @@
-// Skillforge web shell UI — vanilla JS, no build step.
+// Kavvo web shell UI — vanilla JS, no build step.
 // Talks only to the shell's own /api endpoints.
 
 const $ = (id) => document.getElementById(id);
@@ -156,7 +156,7 @@ const SAMPLE_JOB = {
       id: "make-slug",
       kind: "skill",
       skillId: "text.slugify",
-      input: { title: "Hello Skillforge World" },
+      input: { title: "Hello Kavvo World" },
     },
     {
       id: "count",
