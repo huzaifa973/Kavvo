@@ -53,6 +53,42 @@ missing field throws `StepReferenceError`, which the Composer records
 as that step's failure (the job stops as `failed`, earlier outputs
 kept).
 
+## Memory context for chat steps
+
+Pass a `memory` source in `ComposerOptions` and every chat step is
+preceded by a budgeted long-term-memory lookup:
+
+```ts
+new Composer({
+  skills, chat, store,
+  memory,               // anything with buildContext(query, { tokenBudget })
+  memoryTokenBudget: 800, // optional; this is the default
+});
+```
+
+- The Composer depends only on the minimal `MemoryContextSource`
+  shape; `MemoryCore` from `@skillforge/memory-core` satisfies it
+  structurally.
+- The query is derived from the job's **title** plus the step's
+  **resolved** message contents — templates already substituted, so
+  a step that references an earlier step's output retrieves memory
+  about that output.
+- A non-empty result is prepended as one `system` message, bracketed
+  by `[Relevant memory — retrieved from long-term memory for this
+  task]` and `[End of relevant memory]` (exported as
+  `MEMORY_CONTEXT_OPEN` / `MEMORY_CONTEXT_CLOSE`), around the Memory
+  Core's own `## kind` grouped rendering. The source's budget
+  guarantee applies to the section body: its estimated tokens never
+  exceed `memoryTokenBudget`.
+- Injection is **runtime-only**: the persisted job definition keeps
+  the author's messages untouched, and a resumed step re-derives its
+  context from memory as it then stands.
+- Memory is enrichment, never a dependency: no source configured,
+  an empty store, nothing relevant, nothing fitting the budget, or
+  a throwing lookup all leave the step's messages exactly as
+  defined — no empty section, and a broken memory store never fails
+  a job. Skill steps are unaffected (they have no prompt surface).
+
 ## Checkpoint + resume
 
 The Composer persists the full job record (definition + per-step

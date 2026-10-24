@@ -95,6 +95,21 @@ export interface ChatClient {
   ): Promise<{ content: string }>;
 }
 
+/**
+ * Minimal memory surface the Composer needs for chat-step context.
+ * `MemoryCore` from @skillforge/memory-core satisfies this
+ * structurally: `buildContext(query, { tokenBudget })` returns the
+ * budgeted, relevance-ranked context string for a query, with ""
+ * text when nothing relevant fits the budget. The Composer depends
+ * only on this shape, never on the memory package itself.
+ */
+export interface MemoryContextSource {
+  buildContext(
+    query: string,
+    options?: { tokenBudget?: number },
+  ): Promise<{ text: string }>;
+}
+
 /** Thrown when a job definition is invalid (bad ids, no steps, ...). */
 export class JobDefinitionError extends Error {
   constructor(detail: string) {

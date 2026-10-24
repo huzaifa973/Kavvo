@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { ChatMessage } from "@skillforge/router";
 import type { JobStore } from "./store.js";
 import { resolveTemplates } from "./template.js";
 import {
@@ -8,6 +9,7 @@ import {
   type JobDefinition,
   type JobState,
   type JobStepDef,
+  type MemoryContextSource,
   type ResolvedStepDef,
   type SkillRunner,
 } from "./types.js";
@@ -19,6 +21,22 @@ export interface ComposerOptions {
   chat?: ChatClient;
   /** Checkpoint store. State is saved after every step transition. */
   store: JobStore;
+  /**
+   * Optional memory source for chat steps. When set, each chat step
+   * first asks it for a budgeted context relevant to the job (the
+   * query is derived from the job title and the step's resolved
+   * messages) and the result is prepended to the step's messages as
+   * one system message, delimited by MEMORY_CONTEXT_OPEN / _CLOSE.
+   * When the source is absent, returns nothing relevant, or fails,
+   * chat steps run with exactly the messages they were defined with.
+   */
+  memory?: MemoryContextSource;
+  /**
+   * Estimated-token budget handed to the memory source for each chat
+   * step's context. Defaults to DEFAULT_MEMORY_TOKEN_BUDGET (800,
+   * matching the Memory Core's own default budget).
+   */
+  memoryTokenBudget?: number;
   /** Clock, injectable for tests. Defaults to the real clock. */
   now?: () => Date;
   /** Job id generator when a definition carries no id. Defaults to randomUUID. */
@@ -26,6 +44,19 @@ export interface ComposerOptions {
 }
 
 const ID_PATTERN = /^[A-Za-z0-9_-]+$/;
+
+/** Default estimated-token budget for injected memory context. */
+export const DEFAULT_MEMORY_TOKEN_BUDGET = 800;
+
+/**
+ * Delimiters of the memory section prepended to a chat step's
+ * messages. They bracket the Memory Core's own `## kind` grouped
+ * rendering so the model — and any surface displaying the exchange —
+ * can tell retrieved long-term memory from the job's own messages.
+ */
+export const MEMORY_CONTEXT_OPEN =
+  "[Relevant memory — retrieved from long-term memory for this task]";
+export const MEMORY_CONTEXT_CLOSE = "[End of relevant memory]";
 
 /**
  * The Agent Composer: chains skills (and chat calls) into jobs and runs
@@ -39,6 +70,11 @@ const ID_PATTERN = /^[A-Za-z0-9_-]+$/;
  * errors and unknown job ids do throw (JobDefinitionError /
  * JobNotFoundError) because no meaningful job state exists for them.
  *
+ * When a memory source is configured (ComposerOptions.memory), chat
+ * steps additionally receive a budgeted long-term-memory context,
+ * retrieved per step and prepended as a delimited system message;
+ * see withMemoryContext.
+ *
  * One Composer executes one job at a time per job id; coordinating
  * concurrent executors over the same store is a later concern.
  */
@@ -46,6 +82,8 @@ export class Composer {
   private readonly skills: SkillRunner;
   private readonly chat?: ChatClient;
   private readonly store: JobStore;
+  private readonly memory?: MemoryContextSource;
+  private readonly memoryTokenBudget: number;
   private readonly now: () => Date;
   private readonly createId: () => string;
 
@@ -53,6 +91,9 @@ export class Composer {
     this.skills = options.skills;
     this.chat = options.chat;
     this.store = options.store;
+    this.memory = options.memory;
+    this.memoryTokenBudget =
+      options.memoryTokenBudget ?? DEFAULT_MEMORY_TOKEN_BUDGET;
     this.now = options.now ?? (() => new Date());
     this.createId = options.createId ?? (() => randomUUID());
   }
@@ -226,7 +267,60 @@ export class Composer {
       );
     }
     const messages = resolveTemplates(stepDef.messages, outputs);
-    return this.chat.chat(messages, stepDef.options);
+    const withMemory = await this.withMemoryContext(state, messages);
+    return this.chat.chat(withMemory, stepDef.options);
+  }
+
+  /**
+   * Prepends the budgeted memory context for one chat step, when a
+   * memory source is configured and it returns anything. The query
+   * is derived from the job's title and the step's resolved message
+   * contents — the same text the model is about to read, template
+   * references already substituted, so a step that talks about an
+   * earlier step's output retrieves memory about that output.
+   *
+   * The injection is runtime-only: the persisted job definition
+   * keeps the author's messages untouched, and a resumed step
+   * re-derives its context from memory as it then stands.
+   *
+   * Memory is enrichment, never a dependency: no source configured,
+   * an empty result (nothing relevant, or nothing fits the budget),
+   * or a failing lookup all return the messages exactly as resolved.
+   * A broken memory store must never fail a job's chat step.
+   */
+  private async withMemoryContext(
+    state: JobState,
+    messages: ChatMessage[],
+  ): Promise<ChatMessage[]> {
+    if (!this.memory) return messages;
+
+    const parts: string[] = [];
+    if (state.title) parts.push(state.title);
+    for (const message of messages) {
+      parts.push(
+        typeof message.content === "string"
+          ? message.content
+          : JSON.stringify(message.content),
+      );
+    }
+    const query = parts.join("\n").trim();
+    if (!query) return messages;
+
+    let context: { text: string };
+    try {
+      context = await this.memory.buildContext(query, {
+        tokenBudget: this.memoryTokenBudget,
+      });
+    } catch {
+      return messages;
+    }
+    if (!context.text.trim()) return messages;
+
+    const memoryMessage: ChatMessage = {
+      role: "system",
+      content: `${MEMORY_CONTEXT_OPEN}\n${context.text}\n${MEMORY_CONTEXT_CLOSE}`,
+    };
+    return [memoryMessage, ...messages];
   }
 }
 

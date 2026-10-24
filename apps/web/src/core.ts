@@ -88,6 +88,9 @@ export async function createCore(
   const composer = new Composer({
     skills: registry,
     store: new FileJobStore(join(dataDir, "jobs")),
+    // Chat steps (once a chat client is wired) receive a budgeted
+    // memory context retrieved per step from this same MemoryCore.
+    memory,
   });
 
   // The automation runner is the seam the Automations package was

@@ -1458,3 +1458,103 @@ The pre-existing 213 all still pass.
   - `.gitignore` gained a Python section (`.venv/`,
     `__pycache__/`, `*.pyc`) so the 5.5 GB venv can never be
     committed by accident (`git check-ignore` verified).
+
+## 2026-10-24 — Phase 3 integration: budgeted memory context in the Composer
+
+**packages/composer — chat steps now receive Memory Core context**
+
+This closes the gap recorded in the Phase 3 integration entry
+("the Composer does not yet inject a budgeted memory context into
+chat steps"). The Composer half is built and tested now, ahead of
+the chat wiring it was paired with: the injection lives behind the
+existing `ChatClient` seam, so the moment a real chat client plugs
+in, memory comes with it — no Composer changes needed then.
+
+### What was built
+
+- **A minimal memory surface, house style** (`src/types.ts`) —
+  `MemoryContextSource`: one method,
+  `buildContext(query, { tokenBudget? }) -> { text }`. The Composer
+  already depends on minimal structural interfaces (`SkillRunner`,
+  `ChatClient`) instead of sibling packages; memory follows the
+  same pattern, and `MemoryCore` from `@skillforge/memory-core`
+  satisfies the shape structurally. No new package dependency, no
+  new tsconfig/vitest alias.
+- **The injection** (`src/composer.ts`) — two new options:
+  `memory` (the source) and `memoryTokenBudget` (default
+  `DEFAULT_MEMORY_TOKEN_BUDGET` = 800, matching the Memory Core's
+  own default). For each chat step, after template resolution, the
+  Composer derives the query from the job's title plus the step's
+  resolved message contents — the same text the model is about to
+  read, so a step referencing an earlier step's output retrieves
+  memory about that output. A non-empty result is prepended as one
+  `system` message: the Memory Core's `## kind` grouped rendering
+  bracketed by the exported delimiters `MEMORY_CONTEXT_OPEN`
+  (`[Relevant memory — retrieved from long-term memory for this
+  task]`) and `MEMORY_CONTEXT_CLOSE` (`[End of relevant memory]`),
+  so the model — and any surface displaying the exchange — can
+  tell retrieved long-term memory from the job's own messages.
+- **Runtime-only, never persisted.** The stored job definition
+  keeps the author's messages untouched; a resumed step re-derives
+  its context from memory as it then stands. The Memory Core's
+  budget guarantee covers the section body (its estimated tokens
+  never exceed the budget); retrieved items get their access
+  tracked by the core, as with any `buildContext` call.
+- **Enrichment, never a dependency.** No source configured, an
+  empty store, zero-overlap memory, a budget too small for any
+  item, or a lookup that throws — every one leaves the step's
+  messages exactly as defined: no empty section, and a broken
+  memory store never fails a job. Skill steps are untouched (they
+  have no prompt surface to inject into).
+- **Shell wiring** (`apps/web/src/core.ts`) — `createCore` now
+  passes its shared `MemoryCore` into the Composer it assembles,
+  so jobs and automation-runner jobs in the shell get the context
+  automatically once a chat client exists. No endpoint or behavior
+  change today (the shell still has no chat client).
+
+### Tests
+
+9 new tests in `packages/composer/test/memory-context.test.ts`,
+**237 total, all passing; typecheck clean.** The pre-existing 228
+all still pass. Tests drive a real `MemoryCore` over an
+`InMemoryMemoryStore` (seeded through its deduping `add`), a
+recording `ChatClient` stub, and one real Router + MockProvider:
+
+- Injection: a relevant fact + preference are prepended as a
+  delimited system message (open/close markers, `## fact` before
+  `## preference`), an irrelevant note is excluded, the step's own
+  message follows byte-identical, and the persisted definition
+  keeps exactly the author's one message.
+- Ordering: within one kind, the high-importance full-overlap fact
+  renders ahead of the low-importance partial-overlap one.
+- Budget: three kestrel facts under a 20-token budget admit only
+  the top-ranked one, and the extracted section body measures
+  `estimateTokens <= 20`; under a 200 budget all three are in.
+- Query derivation: a chat step saying "Write a summary for
+  {{make-slug.slug}}" retrieves the Frankfurt fact — the query ran
+  on the resolved slug text, not the raw template.
+- End to end through a real Router + MockProvider: the provider's
+  recorded messages carry the memory system message first.
+- No-ops, each asserting the messages arrive exactly as defined:
+  empty store, memory with nothing relevant (no empty section),
+  and no memory source configured at all.
+- Failure isolation: a memory source whose `buildContext` throws
+  still completes the job with the original messages.
+
+### Real vs stubbed
+
+- Real: the query derivation, the budgeted retrieval through the
+  actual Memory Core (scoring, budget guarantee, access tracking),
+  the delimited injection, the no-op and failure-isolation
+  semantics, and the shell's core wiring. Nothing in this piece is
+  stubbed.
+- Still absent, unchanged from before: a real chat client in the
+  shell (BYOK keys pending), so no live model has yet received an
+  injected context — the path is proven against the Router +
+  MockProvider and the recording stub, and the shell needs no
+  further Composer work when keys land.
+- The budget is the Memory Core's documented estimate
+  (`ceil(chars / 4)`), and it binds the section body; the two
+  delimiter lines add a fixed ~20 estimated tokens on top, outside
+  the budget — callers needing a hard whole-message cap should
+  leave that much headroom.
