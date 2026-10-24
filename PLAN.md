@@ -118,3 +118,14 @@ One AI platform that DOES work instead of browsing for it — skill-first agent,
 
 ## User provides
 Domain, repo creation, launch accounts/taps, hosting (phase 5). Graze builds everything else.
+
+## Hosting decision (2026-10-22, prices checked live)
+
+Cloud phase only - hosting starts AFTER the viral/open-source phase, per the locked strategy; $0 hosting spend today (GitHub for code, Cloudflare Pages free tier for the landing page, local app is free forever). When cloud opens:
+
+- **Primary host: Hetzner Cloud (EU region).** Full Linux VPS runs the whole stack as-is (Node + Playwright/Chromium + Python voice). Starter: CX32-class (4 vCPU / 8 GB) ~$11/mo; growth step CX42-class (8 vCPU / 16 GB) ~$21/mo; 20 TB traffic included. Caveats recorded: Hetzner repriced upward twice in 2026, and its US region costs far more than EU (CPX31 US ~$73/mo) - EU is the value pick; agent workloads tolerate EU latency.
+- **Zero-cost on-ramp: Oracle Cloud Always Free ARM** - now 2 OCPU / 12 GB (cut from 4/24 in mid-2026), $0 forever; enough for the very first beta node, with ARM + capacity-availability caveats. Starter, not foundation.
+- **Why the bill stays small: BYOK** - users bring their own model keys, so our AI cost is $0; we rent compute only. Paddle charges a percentage of revenue only (no upfront/platform fee). Domain known: kavvo.xyz ~PKR 573 yr1 or kavvo.io $28.12 yr1.
+- **Later store costs** (mobile app distribution): Apple Developer $99/yr, Google Play $25 one-time.
+- Scale anchor: at 1,000 subscribers x $5/mo = $5,000/mo revenue, server cost stays in the low hundreds with Hetzner-class packing - hosting is NOT the business's cost problem.
+
