@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # The Electron binary is not needed by the test suite or the
+      # typecheck (desktop tests cover pure config helpers only), so
+      # skip its ~100 MB postinstall download.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+
+      # The browser package's tests drive a real headless Chromium
+      # through Playwright's bundled build.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test
+        run: npm test
+
+      - name: Typecheck
+        run: npm run typecheck
